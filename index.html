@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangla Text to Image Generator - Professional Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&family=Noto+Sans+Bengali:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts for Bengali -->
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Kalpurush&family=SolaimanLipi&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:'Poppins',Arial,sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:1rem;
+    color:#fff;
+  }
+  .container{
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 25px 75px rgba(0,0,0,0.5);
+    padding:2.5rem;
+    max-width:1200px;
+    width:100%;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+  }
+  .container::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:5px;
+    background:linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+    border-radius:20px 20px 0 0;
+  }
+  .main-content{
+    position:relative;
+    z-index:1;
+  }
+  h1{
+    font-family:'Montserrat','Noto Sans Bengali',sans-serif;
+    font-size:2.8rem;
+    text-align:center;
+    background:linear-gradient(45deg, #667eea, #f093fb, #f5576c);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:.5rem;
+    font-weight:700;
+    text-shadow:0 2px 10px rgba(0,0,0,0.2);
+  }
+  .subtitle{
+    text-align:center;
+    color:#b0b0d0;
+    margin-bottom:2.5rem;
+    font-size:1.1rem;
+    font-weight:300;
+    max-width:800px;
+    margin-left:auto;
+    margin-right:auto;
+    line-height:1.6;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2.5rem;
+    margin-bottom:2.5rem;
+  }
+  .left-panel,.right-panel{
+    display:flex;
+    flex-direction:column;
+    gap:1.8rem;
+  }
+  .form-group{
+    background:rgba(255,255,255,0.03);
+    border-radius:12px;
+    padding:1.5rem;
+    border:1px solid rgba(255,255,255,0.08);
+    transition:all 0.3s ease;
+  }
+  .form-group:hover{
+    background:rgba(255,255,255,0.05);
+    border-color:rgba(255,255,255,0.15);
+    transform:translateY(-2px);
+  }
+  label{
+    font-weight:600;
+    font-size:1rem;
+    color:#e0e0ff;
+    margin-bottom:.8rem;
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  label i{
+    color:#667eea;
+  }
+  textarea,input[type=text],input[type=number],select{
+    width:100%;
+    padding:1.2rem;
+    background:rgba(0,0,0,0.3);
+    border:2px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+    font-size:1rem;
+    color:#fff;
+    transition:all 0.3s;
+    font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif;
+  }
+  textarea{
+    resize:vertical;
+    min-height:120px;
+    line-height:1.6;
+  }
+  textarea:focus,input:focus,select:focus{
+    outline:none;
+    border-color:#667eea;
+    box-shadow:0 0 15px rgba(102,126,234,0.3);
+    background:rgba(0,0,0,0.4);
+  }
+  .templates-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1rem;
+  }
+  .template-card{
+    padding:1rem;
+    background:rgba(255,255,255,0.05);
+    border:2px solid rgba(255,255,255,0.1);
+    border-radius:10px;
+    cursor:pointer;
+    transition:all 0.3s;
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+  .template-card:hover{
+    border-color:#667eea;
+    background:rgba(102,126,234,0.1);
+    transform:translateY(-3px);
+  }
+  .template-card.active{
+    border-color:#667eea;
+    background:rgba(102,126,234,0.2);
+    box-shadow:0 5px 15px rgba(102,126,234,0.3);
+  }
+  .template-name{
+    font-weight:600;
+    font-size:.9rem;
+    color:#fff;
+  }
+  .template-desc{
+    font-size:.8rem;
+    color:#b0b0d0;
+  }
+  .color-group{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:1rem;
+    align-items:flex-end;
+  }
+  .color-picker{
+    width:60px;
+    height:50px;
+    border:2px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+    cursor:pointer;
+    background:#000;
+  }
+  .font-size-control{
+    display:grid;
+    grid-template-columns:1fr 70px;
+    gap:1rem;
+    align-items:center;
+  }
+  input[type=range]{
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,0.1);
+    border-radius:4px;
+    outline:none;
+    -webkit-appearance:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:22px;
+    height:22px;
+    background:#667eea;
+    border-radius:50%;
+    cursor:pointer;
+    border:2px solid #fff;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  }
+  .size-display{
+    background:rgba(102,126,234,0.2);
+    color:#667eea;
+    font-weight:600;
+    padding:.8rem;
+    border-radius:8px;
+    text-align:center;
+    font-family:'Montserrat',sans-serif;
+  }
+  .watermark-section,.advanced-section{
+    background:rgba(0,0,0,0.2);
+    padding:1.5rem;
+    border-radius:12px;
+    border:2px solid rgba(255,255,255,0.05);
+    margin-bottom:1rem;
+  }
+  .watermark-section h3,.advanced-section h3{
+    font-size:1.2rem;
+    color:#fff;
+    margin-bottom:1rem;
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  .watermark-inputs,.watermark-input-group{
+    display:flex;
+    flex-direction:column;
+    gap:.8rem;
+  }
+  .feature-toggle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem;
+    background:rgba(255,255,255,0.03);
+    border-radius:8px;
+    margin-bottom:1rem;
+    cursor:pointer;
+    transition:all 0.3s;
+  }
+  .feature-toggle:hover{
+    background:rgba(255,255,255,0.05);
+  }
+  .toggle-switch{
+    position:relative;
+    width:55px;
+    height:30px;
+    background:#444;
+    border-radius:15px;
+    transition:background .3s;
+  }
+  .toggle-switch.active{
+    background:#4CAF50;
+  }
+  .toggle-slider{
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:24px;
+    height:24px;
+    background:#fff;
+    border-radius:50%;
+    transition:left .3s;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-switch.active .toggle-slider{
+    left:28px;
+  }
+  .button-group{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1rem;
+    margin-top:2.5rem;
+  }
+  button{
+    padding:1.2rem;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition:all 0.3s;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.7rem;
+    font-family:'Montserrat',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+  #generateBtn{
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    color:#fff;
+    grid-column:1/5;
+  }
+  #generateBtn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 30px rgba(102,126,234,0.4);
+  }
+  #downloadBtn,#copyBtn,#resetBtn,#shareBtn{
+    display:none;
+  }
+  #downloadBtn{
+    background:linear-gradient(135deg,#4CAF50 0%,#45a049 100%);
+    color:#fff;
+  }
+  #downloadBtn:hover{
+    background:linear-gradient(135deg,#45a049 0%,#3d8b40 100%);
+    transform:translateY(-2px);
+  }
+  #copyBtn{
+    background:linear-gradient(135deg,#2196F3 0%,#0b7dda 100%);
+    color:#fff;
+  }
+  #copyBtn:hover{
+    background:linear-gradient(135deg,#0b7dda 0%,#0a6ec1 100%);
+    transform:translateY(-2px);
+  }
+  #resetBtn{
+    background:linear-gradient(135deg,#f44336 0%,#da190b 100%);
+    color:#fff;
+  }
+  #resetBtn:hover{
+    background:linear-gradient(135deg,#da190b 0%,#c4170a 100%);
+    transform:translateY(-2px);
+  }
+  #shareBtn{
+    background:linear-gradient(135deg,#ff9800 0%,#f57c00 100%);
+    color:#fff;
+  }
+  #shareBtn:hover{
+    background:linear-gradient(135deg,#f57c00 0%,#e65100 100%);
+    transform:translateY(-2px);
+  }
+  #status{
+    margin-top:1.5rem;
+    padding:1.2rem;
+    border-radius:10px;
+    font-size:1rem;
+    display:none;
+    animation:fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(-10px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  #status.show{
+    display:block;
+  }
+  #status.success{
+    background:rgba(76,175,80,0.2);
+    color:#4CAF50;
+    border:2px solid rgba(76,175,80,0.3);
+  }
+  #status.error{
+    background:rgba(244,67,54,0.2);
+    color:#f44336;
+    border:2px solid rgba(244,67,54,0.3);
+  }
+  #status.loading{
+    background:rgba(33,150,243,0.2);
+    color:#2196F3;
+    border:2px solid rgba(33,150,243,0.3);
+  }
+  .preview-section{
+    margin-top:2.5rem;
+    padding:2rem;
+    background:rgba(0,0,0,0.3);
+    border-radius:15px;
+    display:none;
+    border:2px solid rgba(255,255,255,0.1);
+  }
+  .preview-section.active{
+    display:block;
+    animation:fadeIn 0.5s ease;
+  }
+  .preview-section h3{
+    text-align:center;
+    margin-bottom:1.5rem;
+    color:#fff;
+    font-size:1.5rem;
+    font-weight:600;
+  }
+  #outputCanvas{
+    max-width:800px;
+    width:100%;
+    border:3px solid rgba(255,255,255,0.1);
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    display:block;
+    margin:auto;
+    background:#fff;
+  }
+  .canvas-container{
+    position:relative;
+    overflow:hidden;
+    border-radius:12px;
+  }
+  .quality-badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(76,175,80,0.9);
+    color:#fff;
+    padding:.5rem 1rem;
+    border-radius:20px;
+    font-size:.9rem;
+    font-weight:600;
+    z-index:10;
+    display:none;
+  }
+  footer{
+    background:rgba(0,0,0,0.4);
+    color:#b0b0d0;
+    text-align:center;
+    padding:2.5rem;
+    margin-top:3rem;
+    border-top:1px solid rgba(255,255,255,0.1);
+    border-radius:0 0 20px 20px;
+    backdrop-filter:blur(5px);
+  }
+  footer p{
+    margin-bottom:1rem;
+    line-height:1.6;
+  }
+  footer strong{
+    color:#667eea;
+    font-weight:600;
+  }
+  footer a{
+    color:#ffeb3b;
+    text-decoration:none;
+    transition:color .3s;
+    font-weight:500;
+  }
+  footer a:hover{
+    color:#fff;
+    text-decoration:underline;
+  }
+  .social-links{
+    display:flex;
+    justify-content:center;
+    gap:1.5rem;
+    margin-top:1.5rem;
+  }
+  .social-links a{
+    color:#fff;
+    font-size:1.5rem;
+    transition:all 0.3s;
+  }
+  .social-links a:hover{
+    color:#667eea;
+    transform:translateY(-3px);
+  }
+  @media (max-width:1024px){
+    .form-grid{grid-template-columns:1fr;}
+    .templates-grid{grid-template-columns:repeat(2,1fr);}
+    .button-group{grid-template-columns:repeat(2,1fr);}
+    #generateBtn{grid-column:1/3;}
+    h1{font-size:2.2rem;}
+    .container{padding:1.5rem;}
+  }
+  @media (max-width:768px){
+    .templates-grid{grid-template-columns:1fr;}
+    .button-group{grid-template-columns:1fr;}
+    #generateBtn{grid-column:1;}
+    h1{font-size:1.8rem;}
+    body{padding:.5rem;}
+  }
+  .loader{
+    border:4px solid rgba(255,255,255,0.1);
+    border-top:4px solid #667eea;
+    border-radius:50%;
+    width:25px;
+    height:25px;
+    animation:spin 1s linear infinite;
+    display:inline-block;
+    margin-right:10px;
+  }
+  @keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+  }
+  .tooltip{
+    position:relative;
+    display:inline-block;
+    margin-left:5px;
+  }
+  .tooltip .tooltiptext{
+    visibility:hidden;
+    width:200px;
+    background:rgba(0,0,0,0.9);
+    color:#fff;
+    text-align:center;
+    border-radius:6px;
+    padding:10px;
+    position:absolute;
+    z-index:100;
+    bottom:125%;
+    left:50%;
+    transform:translateX(-50%);
+    opacity:0;
+    transition:opacity 0.3s;
+    font-size:.9rem;
+    font-weight:normal;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .tooltip:hover .tooltiptext{
+    visibility:visible;
+    opacity:1;
+  }
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+  }
+  .font-dropdown{
+    width:100%;
+    padding:1rem;
+    background:rgba(0,0,0,0.3);
+    border:2px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+    color:#fff;
+    font-size:1rem;
+    font-family:'Poppins',sans-serif;
+  }
+  .font-preview{
+    margin-top:.5rem;
+    padding:.5rem;
+    background:rgba(255,255,255,0.05);
+    border-radius:5px;
+    font-size:1.1rem;
+    min-height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="maindiv class="container">
+    <h1>✨ Bangla Text Image Generator PRO</h1>
+    <p class="subtitle">Create stunning, professional-quality images with Bangla text for social media, marketing, and personal use. High-resolution output with advanced customization options.</p>
+
+form id="textForm">
+      <div class="form-grid">
+        <!-- LEFT PANEL -->
+div class="left-panel">
+          <!-- Text Inputdiv class="formlabel for="textInput"><i class="fas fa-pen"></i> Enter Your Bangla Text:</label>
+            <textarea id="textInput" placeholder="Example: আমার বাংলা আমার গর্ব, আমার দেশ বাংলাদেশ" required></textarea>
+div>
+
+          <!-- Font Style Settingsdiv class="formlabel for="fontStyle"><i class="fasi>label>
+            <select id="fontStyle" class="font-dropdown">
+option value="Noto Sans Bengali">Noto Sans Bengali (Default)</option>
+option value="Hind Siliguri">Hind Siliguri</option>
+              <option value="Kalpurush">Kalpurush</option>
+              <option value="SolaimanLipi">Solaiman Lipi</option>
+option value="Arial">Arial</option>
+option value="Impact">Impact</option>
+option value="Georgia">Georgia</option>
+              <option value="'Times New Roman'">Times New Roman</option>
+            </select>
+            <div id="fontPreview" class="font-preview">ফন্ট প্রিভিউ দেখুন</div>
+          </div>
+
+          <!-- Templatediv class="formlabel><i class="fas fai> Select Template:</label>
+div class="templates-grid">
+              <!-- Original templates -->
+div class="template-card active" data-template="facebook-bluediv class="template-name">📱 Facebook Blue</div>
+div class="template-desc">Professional blue background</div>
+              </div>
+div class="template-card" data-template="facebook-trending">
+                <div class="template-name">🔥 Trending</div>
+div class="template-desc">Vibrant red gradient</div>
+              </div>
+div class="template-card" data-template="facebook-gradient">
+                <div class="template-name">🎨 Gradient</div>
+div class="template-desc">Blue‑purple gradient</div>
+              </div>
+div class="template-card" data-template="facebookdiv class="template-name">🌙 Dark Mode</div>
+                <div class="template-desc">Elegant dark theme</div>
+              </div>
+div class="template-card" data-template="facebook-light">
+                <div class="template-name">☀️ Light</div>
+div class="template-desc">Clean light background</div>
+              </div>
+div class="template-card" data-template="facebook-quote">
+div class="template-name">💬 Quote</div>
+div class="template-desc">Classic quote style</div>
+              </div>
+              <!-- New templatesdiv class="template-card" data-template="modern-minimal">
+                <div class="template-name">⚪ Modern Minimal</div>
+div class="template-desc">Clean & professional</div>
+              </div>
+div class="template-card" data-template="neon-futuristic">
+                <div class="template-name">⚡ Neon Futuristic</div>
+                <div class="template-desc">Glowing neon effects</div>
+              </div>
+div class="template-card" data-template="golden-elegant">
+                <div class="template-name">🌟 Golden Elegant</div>
+                <div class="template-desc">Luxury gold theme</div>
+              </div>
+div class="template-card" data-template="nature-green">
+                <div class="template-name">🌿 Nature Green</div>
+                <div class="template-desc">Fresh natural colors</div>
+              </div>
+div class="template-card" data-template="techdiv class="template-name">💻 Tech Blue</div>
+div class="template-desc">Technology theme</div>
+              </div>
+div class="template-card" data-template="vibrant-rainbow">
+div class="template-name">🌈 Vibrant Rainbow</div>
+                <div class="template-desc">Colorful gradient</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Watermarkdiv class="watermark-section">
+            <hi class="fasi> Text Watermark Settings</h3>
+            <div class="watermark-inputs">
+              <div class="watermark-inputlabel for="watermarkTopLeft">🔝 Top‑left Watermark:</label>
+input type="text" id="watermarkTopLeft" placeholder="e.g. © ARS" value="ARS">
+              </div>
+              <div class="watermark-inputlabel for="watermarkBottomRight">🔻 Bottom‑right Watermark:</label>
+                <input type="text" id="watermarkBottomRight" placeholder="e.g. Abdur Rahman" value="Abdur Rahman Sheikh">
+              </div>
+div>
+          </div>
+
+          <!-- Image Watermark Uploaddiv class="watermark-section">
+            <hi class="fas fa-image"></i> Image Watermark (Optional)</h3>
+            <input type="file" id="imageWatermark" accept="image/*" style="margin-bottom:1rem;">
+            
+div class="form-group" style="background:transparent;border:none;padding:0;">
+              <label for="imageWatermarkSize"><i class="fas fa-expand-alt"></i> Image Watermark Size:</label>
+div class="font-size-control">
+input type="range" id="imageWatermarkSize" min="10" max="50" value="30">
+                <span class="size-display" id="imageWatermarkSizeDisplay">30%</span>
+              </div>
+            </div>
+div class="form-group" style="background:transparent;border:none;padding:0;">
+              <label for="wmOpacity"><i class="fas fa-tint"></i> Image Watermark Opacity:</label>
+div class="font-size-control">
+input type="range" id="wmOpacity" min="10" max="100" value="40">
+                <span class="size-display" id="wmOpacityDisplay">40%</span>
+              </div>
+            </div>
+            
+small style="color:#b0b0d0;font-size:.9rem;display:block;margin-top:1rem;">
+              <i class="fas fa-info-circle"></i> The watermark image will be placed behind text and automatically resized to not interfere with yoursmall>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+div class="right-panel">
+          <!-- Colour Customisation -->
+          <div class="form-group">
+            <label><i class="fas fa-swatches"></i> Color Customisation</label>
+            <div class="color-group">
+              <label style="font-size:.9rem;color:#b0b0d0;">label>
+input type="color" id="bgColor" class="color-picker" value="#1877f2">
+            </div>
+            <div class="color-group" style="margin-top:1rem;">
+              <label style="font-size:.9rem;color:#b0b0d0label>
+input type="color" id="textColor" class="color-picker" value="#ffffff">
+div>
+            <div class="color-group" style="margin-top:1rem;">
+label style="font-size:.9rem;color:#b0b0d0;">Watermark Color:</label>
+input type="color" id="watermarkColor" class="color-picker" value="#ff5722">
+            </div>
+          </div>
+
+          <!-- Font Size & Weightdiv class="formlabel for="i class="fas fa-text-height"></ilabel>
+div class="font-size-control">
+input type="range" id="fontSize" min="20" max="120" value="48">
+              <span class="size-display" id="sizeDisplay">48px</span>
+            </div>
+          </div>
+
+div class="formlabel for="fontWeight"><i class="fas fa-bold"></i> Font Weight:</label>
+            <div class="font-size-control">
+              <input type="range" id="fontWeight" min="100" max="900" value="700" step="100">
+              <span class="size-display" id="weightDisplay">Bold (700)</span>
+            </div>
+          </div>
+
+          <!-- Advanced Featuresdiv class="advancedi class="fas fa-cogs"></i> Advanced Features</h3>
+div class="featurediv class="featurespan>Border Effect</span>
+div class="toggle-switch active" data-feature="border">
+                  <div class="toggle-slider"></div>
+                </div>
+              </div>
+div class="feature-toggle">
+span>Shadow Effect</span>
+                <div class="toggle-switch active" data-feature="shadow">
+                  <div class="toggle-sldiv>
+div>
+              </div>
+div class="featurespan>Background Pattern</span>
+                <div class="toggle-switch" data-feature="pattern">
+                  <div class="div>
+                </div>
+              </div>
+div class="featurespan>Centerdiv class="toggle-switch active" data-feature="centered">
+                  <div class="div>
+              </div>
+div class="feature-toggle">
+span>Text Outline</span>
+                <div class="toggle-switch" data-feature="outline">
+                  <div class="div>
+div>
+              </div>
+div class="feature-toggle">
+                <span>Text Gradient</span>
+                <div class="toggle-switch" data-feature="textGradient">
+                  <div class="div>
+div>
+              </div>
+div class="feature-toggle">
+                <span>div class="toggle-switch" data-feature="roundCorners">
+                  <div class="div>
+              </div>
+div class="feature-toggle">
+                <span>High Quality Mode</span>
+div class="toggle-switch active" data-feature="highdiv class="toggle-slider"></divdiv>
+              </div>
+            </div>
+div>
+
+          <!-- Image Dimensions -->
+div class="formlabel><i class="fas fa-expand"></ilabel>
+select id="imageDimension" class="font-dropdown">
+optgroup label="Facebook">
+                <option value="1200x628">Feed Post (1200option>
+option value="1080x1080">Square Post (1080×option>
+option value="1200x1500">Portrait (1200option>
+option value="828x315">Cover Photo (828×315)</option>
+                <option value="1200x1200">Stories (1200option>
+              </optgroup>
+              <optgroup label="Instagramoption value="1080x1350">Portrait (1080×1350)</option>
+option value="1080x1080">Square (1080×1080)</option>
+                <option value="1080x566">Landscape (1080×566)</option>
+option value="1080x1920">Stories (1080×1920)</option>
+              </optoptgroup label="Twitter/Xoption value="1200x675">Post (1200×option>
+option value="1500x500">Header (1500×500)</option>
+              </optoptgroup label="High Quality">
+option value="1920x1080">HD (1920×1080)</option>
+option value="2560x1440">2K (2560×1440)</option>
+                <option value="3840x2160">4K (3840×2160)</option>
+                <option value="4096x4096">4K Square (4096×option>
+              </optgroup>
+            </select>
+            <small style="color:#b0b0d0;font-size:.85rem;display:block;margin-top:.5rem;">
+i class="fas fa-star"></i> Higher resolutions produce better quality but take longer to generate.
+small>
+          </div>
+        </div>
+div>
+
+      <!-- Buttons -->
+div class="button-group">
+button type="submit" id="generatei class="fasi> Generate High-Quality Image</button>
+button type="button" idi class="fasi> Download PNG</button>
+button type="button" id="copyBtn"><i class="fas fa-copy"></i> Copy Image</button>
+button type="button" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
+button type="button" id="resetBtn"><i class="fas fa-redo"></i> Reset All</button>
+      </div>
+    </form>
+
+    <!-- Status Message -->
+    <divdiv>
+
+    <!-- Preview -->
+    <div class="preview-section" id="previewSection">
+i class="fas fa-eye"></i> Preview</h3>
+div class="canvasdiv class="quality-badge" id="qualityBadge">ULTRA HD</div>
+        <canvas id="outputcanvas>
+div>
+    </div>
+div>
+
+<footer>
+  <p>Created by <strong>ARS (Abdur Rahman Sheikh)</strong> with ❤️<br>
+    <small>Professional Edition • High-Quality Image Generator • Optimized for Socialsmall>© 2024 Bangla Text Image Generator PRO. All rights reservedp>
+  
+  <div class="social-links">
+a href="https://github.com/your-repo" title="GitHub Source"><i class="fab fa-github"></i></a>
+    <a href="#" title="Twitter"><i class="fab fa-twa>
+    <a href="#" title="LinkedIn"><i class="fab fa-linkeda>
+a href="#" title="Portfolio"><i class="fas fa-globe"></i></a>
+  </div>
+  
+  <p style="margin-top:1.5rem;font-size:.9rem;">
+    <i class="fas fa-info-circle"></i> This tool generates high-resolution images using advanced canvas rendering techniques.
+    Images are processed locally in your browser for maximum privacy.
+  </p>
+</footer>
+
+<script>
+/* ====================== GLOBAL STATE ====================== */
+const form = document.getElementById('textForm');
+const textInput = document.getElementById('textInput');
+const bgColorInput = document.getElementById('bgColor');
+const textColorInput = document.getElementById('textColor');
+const watermarkColorInput = document.getElementById('watermarkColor');
+const fontSizeInput = document.getElementById('fontSize');
+const fontWeightInput = document.getElementById('fontWeight');
+const sizeDisplay = document.getElementById('sizeDisplay');
+const weightDisplay = document.getElementById('weightDisplay');
+const generateBtn = document.getElementById('generateBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const copyBtn = document.getElementById('copyBtn');
+const shareBtn = document.getElementById('shareBtn');
+const resetBtn = document.getElementById('resetBtn');
+const canvas = document.getElementById('outputCanvas');
+const status = document.getElementById('status');
+const previewSection = document.getElementById('previewSection');
+const qualityBadge = document.getElementById('qualityBadge');
+const templateCards = document.querySelectorAll('.template-card');
+const toggleSwitches = document.querySelectorAll('.toggle-switch');
+const wmTopLeftInput = document.getElementById('watermarkTopLeft');
+const wmBottomRightInput = document.getElementById('watermarkBottomRight');
+const imageDimensionSelect = document.getElementById('imageDimension');
+const imageWatermarkInput = document.getElementById('imageWatermark');
+const imageWatermarkSizeInput = document.getElementById('imageWatermarkSize');
+const imageWatermarkSizeDisplay = document.getElementById('imageWatermarkSizeDisplay');
+const wmOpacityInput = document.getElementById('wmOpacity');
+const wmOpacityDisplay = document.getElementById('wmOpacityDisplay');
+const fontStyleSelect = document.getElementById('fontStyle');
+const fontPreview = document.getElementById('fontPreview');
+
+let currentTemplate = 'facebook-blue';
+let features = {
+  border: true,
+  shadow: true,
+  pattern: false,
+  centered: true,
+  outline: false,
+  textGradient: false,
+  roundCorners: false,
+  highQuality: true
+};
+let uploadedImg = null;
+let currentScaleFactor = 1;
+
+/* ====================== TEMPLATE PRESETS ====================== */
+const templates = {
+  'facebook-blue': { bg: '#1877f2', txt: '#ffffff', fs: 48, wm: '#ffd700' },
+  'facebook-trending': { bg: '#ff6b6b', txt: '#ffffff', fs: 52, wm: '#ffeb3b' },
+  'facebook-gradient': { bg: '#667eea', txt: '#ffffff', fs: 48, wm: '#764ba2' },
+  'facebook-dark': { bg: '#1a1a1a', txt: '#ffffff', fs: 48, wm: '#00d4ff' },
+  'facebook-light': { bg: '#f5f5f5', txt: '#333333', fs: 48, wm: '#ff5722' },
+  'facebook-quote': { bg: '#fff9e6', txt: '#d32f2f', fs: 52, wm: '#ff6f00' },
+  'modern-minimal': { bg: '#ffffff', txt: '#222222', fs: 46, wm: '#888888' },
+  'neon-futuristic': { bg: '#0f0c29', txt: '#00ffcc', fs: 54, wm: '#ff6ec7' },
+  'golden-elegant': { bg: '#1a1a1a', txt: '#ffd700', fs: 50, wm: '#ff6b35' },
+  'nature-green': { bg: '#2e7d32', txt: '#ffffff', fs: 48, wm: '#a5d6a7' },
+  'tech-blue': { bg: '#1565c0', txt: '#e3f2fd', fs: 48, wm: '#4fc3f7' },
+  'vibrant-rainbow': { bg: '#ff0080', txt: '#ffffff', fs: 52, wm: '#00ffaa' }
+};
+
+/* ====================== UI INITIALISATION ====================== */
+function applyTemplate(preset) {
+  bgColorInput.value = preset.bg;
+  textColorInput.value = preset.txt;
+  fontSizeInput.value = preset.fs;
+  watermarkColorInput.value = preset.wm;
+  sizeDisplay.textContent = `${preset.fs}px`;
+  fontPreview.style.fontFamily = fontStyleSelect.value;
+  fontPreview.style.fontSize = `${preset.fs}px`;
+}
+applyTemplate(templates['facebook-blue']);
+
+/* ====================== EVENT LISTENERS ====================== */
+// Font size live update
+fontSizeInput.addEventListener('input', e => {
+  sizeDisplay.textContent = `${e.target.value}px`;
+  fontPreview.style.fontSize = `${e.target.value}px`;
+});
+
+// Font weight live update
+fontWeightInput.addEventListener('input', e => {
+  const weight = parseInt(e.target.value);
+  weightDisplay.textContent = weight >= 700 ? `Bold (${weight})` : 
+                              weight >= 400 ? `Normal (${weight})` : 
+                              `Light (${weight})`;
+  fontPreview.style.fontWeight = weight;
+});
+
+// Font style change
+fontStyleSelect.addEventListener('change', e => {
+  fontPreview.style.fontFamily = e.target.value;
+  fontPreview.textContent = e.target.value.includes('Bengali') || 
+                           e.target.value.includes('Siliguri') || 
+                           e.target.value.includes('Kalpurush') || 
+                           e.target.value.includes('Solaiman') ? 
+                           'ফন্ট প্রিভিউ দেখুন' : 'Font Preview Text';
+});
+
+// Image watermark size
+imageWatermarkSizeInput.addEventListener('input', e => {
+  imageWatermarkSizeDisplay.textContent = `${e.target.value}%`;
+});
+
+// Image watermark opacity
+wmOpacityInput.addEventListener('input', e => {
+  wmOpacityDisplay.textContent = `${e.target.value}%`;
+});
+
+// Template selection
+templateCards.forEach(card => {
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    templateCards.forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    currentTemplate = card.dataset.template;
+    if (templates[currentTemplate]) {
+      applyTemplate(templates[currentTemplate]);
+    }
+  });
+});
+
+// Feature toggles
+toggleSwitches.forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('active');
+    const feature = toggle.dataset.feature;
+    features[feature] = toggle.classList.contains('active');
+    
+    if (feature === 'highQuality') {
+      if (features.highQuality) {
+        qualityBadge.style.display = 'block';
+      } else {
+        qualityBadge.style.display = 'none';
+      }
+    }
+  });
+});
+
+// Reset button
+resetBtn.addEventListener('click', () => {
+  form.reset();
+  templateCards.forEach(c => c.classList.remove('active'));
+  document.querySelector('.template-card[data-template="facebook-blue"]').classList.add('active');
+  currentTemplate = 'facebook-blue';
+  applyTemplate(templates['facebook-blue']);
+  
+  features = {
+    border: true,
+    shadow: true,
+    pattern: false,
+    centered: true,
+    outline: false,
+    textGradient: false,
+    roundCorners: false,
+    highQuality: true
+  };
+  
+  toggleSwitches.forEach(t => {
+    if (t.dataset.feature === 'border' || t.dataset.feature === 'shadow' || 
+        t.dataset.feature === 'centered' || t.dataset.feature === 'highQuality') {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+  
+  uploadedImg = null;
+  previewSection.classList.remove('active');
+  downloadBtn.style.display = 'none';
+  copyBtn.style.display = 'none';
+  shareBtn.style.display = 'none';
+  qualityBadge.style.display = 'block';
+  showStatus('✅ All settings have been reset!', 'success');
+});
+
+// Image watermark upload
+imageWatermarkInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) { uploadedImg = null; return; }
+  
+  if (!file.type.match('image.*')) {
+    showStatus('❌ Please select a valid image file', 'error');
+    return;
+  }
+  
+  const img = new Image();
+  img.onload = () => { 
+    uploadedImg = img;
+    showStatus('✅ Watermark image loaded successfully!', 'success');
+  };
+  img.onerror = () => { 
+    uploadedImg = null; 
+    showStatus('❌ Failed to load image. Please try another file.', 'error'); 
+  };
+  img.src = URL.createObjectURL(file);
+});
+
+/* ====================== STATUS HELPER ====================== */
+function showStatus(msg, type = 'loading') {
+  status.textContent = msg;
+  status.className = `show ${type}`;
+  if (type === 'success' || type === 'error') {
+    setTimeout(() => status.classList.remove('show'), 4000);
+  }
+}
+
+/* ====================== TEXT WRAPPING ====================== */
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(/\s+/);
+  let line = '';
+  const lines = [];
+  
+  for (let n = 0; n < words.length; n++) {
+    const test = line + words[n] + ' ';
+    if (ctx.measureText(test).width > maxWidth && n > 0) {
+      lines.push(line.trim());
+      line = words[n] + ' ';
+    } else {
+      line = test;
+    }
+  }
+  lines.push(line.trim());
+
+  const startY = features.centered ? y - ((lines.length - 1) * lineHeight / 2) : y;
+  for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], x, startY + i * lineHeight);
+  }
+  
+  return lines.length;
+}
+
+/* ====================== HIGH QUALITY CANVAS SETUP ====================== */
+function setupHighQualityCanvas(scaleFactor) {
+  const [w, h] = imageDimensionSelect.value.split('x').map(Number);
+  const scaledWidth = w * scaleFactor;
+  const scaledHeight = h * scaleFactor;
+  
+  canvas.width = scaledWidth;
+  canvas.height = scaledHeight;
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
+  
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scaleFactor, scaleFactor);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.textRendering = 'optimizeLegibility';
+  
+  return { ctx, scaleFactor, originalWidth: w, originalHeight: h };
+}
+
+/* ====================== MAIN IMAGE GENERATOR ====================== */
+function generateImage(text) {
+  const bgColor = bgColorInput.value;
+  const txtColor = textColorInput.value;
+  const fontSize = parseInt(fontSizeInput.value);
+  const fontWeight = parseInt(fontWeightInput.value);
+  const wmColor = watermarkColorInput.value;
+  const wmTopLeft = wmTopLeftInput.value || 'ARS';
+  const wmBottomRight = wmBottomRightInput.value || 'Abdur Rahman Sheikh';
+  const fontStyle = fontStyleSelect.value;
+  const [w, h] = imageDimensionSelect.value.split('x').map(Number);
+  
+  // Calculate scale factor for high quality
+  currentScaleFactor = features.highQuality ? 4 : 2; // 4x for high quality, 2x for normal
+  
+  const { ctx, scaleFactor } = setupHighQualityCanvas(currentScaleFactor);
+  const scaledW = w * scaleFactor;
+  const scaledH = h * scaleFactor;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, scaledW, scaledH);
+  
+  // ---- HIGH QUALITY BACKGROUND ------------------------------------
+  if (currentTemplate === 'facebook-gradient' || currentTemplate === 'neon-futuristic') {
+    const grad = ctx.createLinearGradient(0, 0, scaledW, scaledH);
+    grad.addColorStop(0, bgColor);
+    grad.addColorStop(1, wmColor);
+    ctx.fillStyle = grad;
+  } else if (currentTemplate === 'vibrant-rainbow') {
+    const grad = ctx.createLinearGradient(0, 0, scaledW, 0);
+    grad.addColorStop(0, '#ff0080');
+    grad.addColorStop(0.5, '#00ffaa');
+    grad.addColorStop(1, '#0080ff');
+    ctx.fillStyle = grad;
+  } else {
+    ctx.fillStyle = bgColor;
+  }
+  ctx.fillRect(0, 0, scaledW, scaledH);
+
+  // ---- BACKGROUND PATTERN (High Quality) --------------------------
+  if (features.pattern) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+    const step = 60 * scaleFactor;
+    for (let i = 0; i < scaledW; i += step) {
+      for (let j = 0; j < scaledH; j += step) {
+        ctx.fillRect(i, j, step * 0.6, step * 0.6);
+      }
+    }
+    ctx.restore();
+  }
+
+  // ---- IMAGE WATERMARK (Placed FIRST, behind text) ----------------
+  if (uploadedImg) {
+    const watermarkSize = parseInt(imageWatermarkSizeInput.value) / 100;
+    const opacity = parseInt(wmOpacityInput.value) / 100;
+    const maxW = scaledW * watermarkSize;
+    const scale = Math.min(1, maxW / uploadedImg.width);
+    const imgW = uploadedImg.width * scale;
+    const imgH = uploadedImg.height * scale;
+    const x = (scaledW - imgW) / 2;
+    const y = (scaledH - imgH) / 2;
+    
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.drawImage(uploadedImg, x, y, imgW, imgH);
+    ctx.restore();
+  }
+
+  // ---- SHADOW EFFECT ----------------------------------------------
+  if (features.shadow) {
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    ctx.shadowBlur = 25 * scaleFactor;
+    ctx.shadowOffsetX = 8 * scaleFactor;
+    ctx.shadowOffsetY = 8 * scaleFactor;
+  }
+
+  // ---- MAIN TEXT ---------------------------------------------------
+  const scaledFontSize = fontSize * scaleFactor;
+  ctx.font = `${fontWeight} ${scaledFontSize}px '${fontStyle}', 'Noto Sans Bengali', Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  // Text gradient if enabled
+  if (features.textGradient) {
+    const textGrad = ctx.createLinearGradient(scaledW * 0.2, 0, scaledW * 0.8, 0);
+    textGrad.addColorStop(0, txtColor);
+    textGrad.addColorStop(0.5, '#ffffff');
+    textGrad.addColorStop(1, txtColor);
+    ctx.fillStyle = textGrad;
+  } else {
+    ctx.fillStyle = txtColor;
+  }
+  
+  // Text outline if enabled
+  if (features.outline) {
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2 * scaleFactor;
+    ctx.strokeText(text, scaledW / 2, scaledH / 2);
+  }
+  
+  // Calculate text position (centered or with offset)
+  const centerY = features.centered ? scaledH / 2 : scaledH * 0.4;
+  const linesCount = wrapText(ctx, text, scaledW / 2, centerY, scaledW * 0.85, scaledFontSize * 1.3);
+
+  // Reset shadow for other elements
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  // ---- BORDER EFFECT -----------------------------------------------
+  if (features.border) {
+    ctx.strokeStyle = txtColor;
+    ctx.lineWidth = 4 * scaleFactor;
+    ctx.globalAlpha = 0.3;
+    ctx.strokeRect(15 * scaleFactor, 15 * scaleFactor, 
+                   scaledW - 30 * scaleFactor, scaledH - 30 * scaleFactor);
+    ctx.globalAlpha = 1.0;
+  }
+
+  // ---- ROUND CORNERS -----------------------------------------------
+  if (features.roundCorners) {
+    ctx.save();
+    const radius = 40 * scaleFactor;
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(scaledW - radius, 0);
+    ctx.quadraticCurveTo(scaledW, 0, scaledW, radius);
+    ctx.lineTo(scaledW, scaledH - radius);
+    ctx.quadraticCurveTo(scaledW, scaledH, scaledW - radius, scaledH);
+    ctx.lineTo(radius, scaledH);
+    ctx.quadraticCurveTo(0, scaledH, 0, scaledH - radius);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+    ctx.clip();
+    ctx.restore();
+  }
+
+  // ---- TEXT WATERMARKS (Positioned inside) -------------------------
+  ctx.fillStyle = wmColor;
+  ctx.font = `bold ${24 * scaleFactor}px '${fontStyle}', 'Noto Sans Bengali', Arial, sans-serif`;
+  ctx.globalAlpha = 0.9;
+
+  // Top-left watermark - moved more inner down
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  const topLeftOffset = 60 * scaleFactor; // Increased from 30 to 60
+  ctx.fillText(wmTopLeft, topLeftOffset, topLeftOffset);
+
+  // Bottom-right watermark - moved more inner up
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  const bottomRightOffset = 60 * scaleFactor; // Increased from 30 to 60
+  ctx.fillText(wmBottomRight, scaledW - bottomRightOffset, scaledH - bottomRightOffset);
+  
+  ctx.globalAlpha = 1.0;
+
+  // Show quality badge
+  if (features.highQuality) {
+    qualityBadge.textContent = currentScaleFactor === 4 ? 'ULTRA HD 4X' : 'HD 2X';
+    qualityBadge.style.display = 'block';
+  }
+}
+
+/* ====================== FORM SUBMISSION ====================== */
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const txt = textInput.value.trim();
+  
+  if (!txt) {
+    showStatus('❌ Please enter some text to generate an image.', 'error');
+    return;
+  }
+  
+  showStatus('🔄 Generating high-quality image... This may take a moment.', 'loading');
+  generateBtn.innerHTMLdiv class="loader"></div> Processing...';
+  generateBtn.disabled = true;
+  
+  // Use setTimeout to allow UI to update
+  setTimeout(() => {
+    try {
+      generateImage(txt);
+      showStatus('✅ High-quality image generated successfully!', 'success');
+      previewSection.classList.add('active');
+      downloadBtn.style.display = 'inline-flex';
+      copyBtn.style.display = 'inline-flex';
+      shareBtn.style.display = 'inline-flex';
+      
+      // Scroll to preview
+      previewSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (error) {
+      showStatus(`❌ Error generating image: ${error.message}`, 'error');
+      console.error('Image generation error:', error);
+    } finally {
+      generatei class="fasi> Generate High-Quality Image';
+      generateBtn.disabled = false;
+    }
+  }, 100);
+});
+
+/* ====================== DOWNLOAD FUNCTION ====================== */
+downloadBtn.addEventListener('click', () => {
+  try {
+    const [w, h] = imageDimensionSelect.value.split('x').map(Number);
+    const scale = features.highQuality ? 4 : 2;
+    
+    // Create a temporary canvas for download
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = w * scale;
+    tempCanvas.height = h * scale;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    // Draw the original canvas to temp canvas
+    tempCtx.drawImage(canvas, 0, 0);
+    
+    const link = document.createElement('a');
+    link.href = tempCanvas.toDataURL('image/png', 1.0);
+    link.download = `bangla-image-${Date.now()}-${w}x${h}@${scale}x.png`;
+    link.click();
+    
+    showStatus(`✅ Image downloaded (${w}×${h} @ ${scale}x scale)!`, 'success');
+  } catch (error) {
+    showStatus('❌ Failed to download image', 'error');
+  }
+});
+
+/* ====================== COPY TO CLIPBOARD ====================== */
+copyBtn.addEventListener('click', () => {
+  canvas.toBlob(blob => {
+    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+      .then(() => showStatus('✅ Image copied to clipboard!', 'success'))
+      .catch(() => showStatus('❌ Failed to copy image to clipboard', 'error'));
+  }, 'image/png', 1.0);
+});
+
+/* ====================== SHARE FUNCTION ====================== */
+shareBtn.addEventListener('click', () => {
+  canvas.toBlob(blob => {
+    const file = new File([blob], 'bangla-image.png', { type: 'image/png' });
+    
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({
+        files: [file],
+        title: 'Bangla Text Image',
+        text: 'Check out this image created with Bangla Text Image Generator PRO'
+      })
+      .then(() => showStatus('✅ Image shared successfully!', 'success'))
+      .catch(error => {
+        if (error.name !== 'AbortError') {
+          showStatus('❌ Sharing failed or cancelled', 'error');
+        }
+      });
+    } else {
+      // Fallback: Download
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `bangla-image-${Date.now()}.png`;
+      link.click();
+      showStatus('✅ Image ready for sharing!', 'success');
+    }
+  }, 'image/png', 1.0);
+});
+
+/* ====================== INITIALIZE FONT PREVIEW ====================== */
+fontPreview.style.fontFamily = fontStyleSelect.value;
+fontPreview.style.fontSize = `${fontSizeInput.value}px`;
+fontPreview.style.fontWeight = fontWeightInput.value;
+
+// Initialize quality badge
+qualityBadge.style.display = features.highQuality ? 'block' : 'none';
+
+// Initialize all toggle switches
+toggleSwitches.forEach(toggle => {
+  const feature = toggle.dataset.feature;
+  if (features[feature]) {
+    toggle.classList.add('active');
+  } else {
+    toggle.classList.remove('active');
+  }
+});
+</scriptbody>
+</html>
