@@ -2,68 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Bangla Text Image Generator PRO MAX</title>
+<title>ULTIMATE Bangla Image Generator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body{
-  margin:0;
-  padding:20px;
+  margin:0;padding:20px;
   font-family:Poppins,sans-serif;
-  background:#0f172a;
-  color:#fff;
+  background:#020617;color:#fff
 }
 .container{
-  max-width:1200px;
-  margin:auto;
-  background:#111827;
-  padding:30px;
-  border-radius:20px;
+  max-width:1300px;margin:auto;
+  background:#020617;padding:25px;
+  border-radius:20px
 }
-h1{text-align:center}
+h1{text-align:center;margin-bottom:10px}
 .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
+  display:grid;grid-template-columns:1fr 1fr;gap:20px
 }
 .box{
-  background:#020617;
-  padding:20px;
-  border-radius:14px;
+  background:#020617;border:1px solid #1e293b;
+  padding:20px;border-radius:14px
 }
-label{font-weight:600;display:block;margin:10px 0 6px}
+label{display:block;margin:10px 0 6px;font-weight:600}
 textarea,input,select{
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  border:none;
+  width:100%;padding:12px;border-radius:8px;border:none
 }
 textarea{min-height:120px}
 button{
-  width:100%;
-  margin-top:20px;
-  padding:15px;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(135deg,#6366f1,#9333ea);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
+  padding:15px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#9333ea);
+  color:#fff;font-weight:700;cursor:pointer;width:100%
 }
-button:hover{opacity:.9}
 canvas{
-  margin-top:30px;
+  margin-top:25px;
   max-width:100%;
-  border-radius:16px;
-  background:#fff;
+  border-radius:16px;background:#000
 }
-.actions{
-  display:flex;
-  gap:15px;
-}
+.actions{display:flex;gap:15px;margin-top:15px}
 @media(max-width:900px){
   .grid{grid-template-columns:1fr}
 }
@@ -71,9 +49,8 @@ canvas{
 </head>
 
 <body>
-
 <div class="container">
-<h1>🔥 Bangla Text Image Generator – PRO MAX</h1>
+<h1>👑 Bangla Image Generator – FINAL ULTIMATE</h1>
 
 <div class="grid">
 
@@ -85,36 +62,50 @@ canvas{
 <select id="font">
 <option value="Noto Sans Bengali">Noto Sans Bengali</option>
 <option value="Hind Siliguri">Hind Siliguri</option>
+<option value="Arial">Arial</option>
 </select>
 
 <label>Template</label>
 <select id="template">
-<option value="fb">Facebook Post (1200×628)</option>
+<option value="fb">Facebook (1200×628)</option>
 <option value="square">Square (1080×1080)</option>
 <option value="story">Story (1080×1920)</option>
+<option value="4k">4K (3840×2160)</option>
 </select>
 
-<label>Font Size</label>
-<input type="range" id="size" min="40" max="120" value="70">
+<label>Background Type</label>
+<select id="bgType">
+<option value="solid">Solid Color</option>
+<option value="gradient">Gradient</option>
+<option value="image">Image Upload</option>
+</select>
+
+<label>Upload Background Image</label>
+<input type="file" id="bgImage">
 </div>
 
 <div class="box">
-<label>Gradient Background</label>
+<label>Background Color 1</label>
 <input type="color" id="bg1" value="#2563eb">
-<input type="color" id="bg2" value="#9333ea" style="margin-top:10px">
+
+<label>Background Color 2</label>
+<input type="color" id="bg2" value="#9333ea">
 
 <label>Text Color</label>
 <input type="color" id="color" value="#ffffff">
 
-<label>Watermark</label>
+<label>Watermark Text</label>
 <input type="text" id="watermark" value="ARS">
+
+<label>Blur Background</label>
+<input type="range" id="blur" min="0" max="20" value="0">
 </div>
 
 </div>
 
 <div class="actions">
 <button onclick="generate()">✨ Generate</button>
-<button onclick="download()">⬇ Download PNG</button>
+<button onclick="download()">⬇ Download</button>
 </div>
 
 <canvas id="canvas"></canvas>
@@ -123,71 +114,85 @@ canvas{
 <script>
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
+let bgImg=null;
 
-function setSize(type){
-  if(type==="fb"){canvas.width=1200;canvas.height=628;}
-  if(type==="square"){canvas.width=1080;canvas.height=1080;}
-  if(type==="story"){canvas.width=1080;canvas.height=1920;}
+document.getElementById("bgImage").onchange=e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const img=new Image();
+  img.onload=()=>bgImg=img;
+  img.src=URL.createObjectURL(f);
+};
+
+function setSize(t){
+ if(t==="fb"){canvas.width=1200;canvas.height=628;}
+ if(t==="square"){canvas.width=1080;canvas.height=1080;}
+ if(t==="story"){canvas.width=1080;canvas.height=1920;}
+ if(t==="4k"){canvas.width=3840;canvas.height=2160;}
 }
 
-function drawWrappedText(text,x,y,maxWidth,lineHeight){
-  const words=text.split(" ");
-  let line="";
-  let yy=y;
-  for(let i=0;i<words.length;i++){
-    let test=line+words[i]+" ";
-    if(ctx.measureText(test).width>maxWidth){
-      ctx.fillText(line,x,yy);
-      line=words[i]+" ";
-      yy+=lineHeight;
-    }else line=test;
-  }
-  ctx.fillText(line,x,yy);
+function wrap(text,x,y,max,lh){
+ const w=text.split(" ");let line="",yy=y;
+ w.forEach(word=>{
+  let test=line+word+" ";
+  if(ctx.measureText(test).width>max){
+    ctx.fillText(line,x,yy);line=word+" ";yy+=lh;
+  }else line=test;
+ });
+ ctx.fillText(line,x,yy);
 }
 
 function generate(){
-  const text=document.getElementById("text").value;
-  const font=document.getElementById("font").value;
-  const size=document.getElementById("size").value;
-  const color=document.getElementById("color").value;
-  const bg1=document.getElementById("bg1").value;
-  const bg2=document.getElementById("bg2").value;
-  const watermark=document.getElementById("watermark").value;
-  const template=document.getElementById("template").value;
+ const t=document.getElementById("text").value;
+ const f=document.getElementById("font").value;
+ const col=document.getElementById("color").value;
+ const wm=document.getElementById("watermark").value;
+ const bg1=document.getElementById("bg1").value;
+ const bg2=document.getElementById("bg2").value;
+ const type=document.getElementById("template").value;
+ const bgType=document.getElementById("bgType").value;
+ const blur=document.getElementById("blur").value;
 
-  setSize(template);
+ setSize(type);
 
-  const grad=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-  grad.addColorStop(0,bg1);
-  grad.addColorStop(1,bg2);
-  ctx.fillStyle=grad;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+ ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  ctx.fillStyle=color;
-  ctx.font=`900 ${size}px '${font}', sans-serif`;
-  ctx.textAlign="center";
-  ctx.textBaseline="middle";
-  ctx.shadowColor="rgba(0,0,0,.4)";
-  ctx.shadowBlur=8;
+ if(bgType==="image" && bgImg){
+  ctx.filter=`blur(${blur}px)`;
+  ctx.drawImage(bgImg,0,0,canvas.width,canvas.height);
+  ctx.filter="none";
+ }else if(bgType==="gradient"){
+  const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  g.addColorStop(0,bg1);g.addColorStop(1,bg2);
+  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
+ }else{
+  ctx.fillStyle=bg1;ctx.fillRect(0,0,canvas.width,canvas.height);
+ }
 
-  drawWrappedText(text,canvas.width/2,canvas.height/2,canvas.width-200,size+15);
+ let size=Math.floor(canvas.width/12);
+ ctx.font=`900 ${size}px '${f}', sans-serif`;
+ ctx.textAlign="center";ctx.textBaseline="middle";
+ ctx.fillStyle=col;
+ ctx.shadowColor="rgba(0,0,0,.5)";
+ ctx.shadowBlur=12;
 
-  ctx.shadowBlur=0;
-  ctx.font="bold 26px Arial";
-  ctx.textAlign="right";
-  ctx.fillStyle="rgba(255,255,255,.6)";
-  ctx.fillText(watermark,canvas.width-30,canvas.height-30);
+ wrap(t,canvas.width/2,canvas.height/2,canvas.width-300,size+20);
+
+ ctx.shadowBlur=0;
+ ctx.font="bold 36px Arial";
+ ctx.textAlign="right";
+ ctx.fillStyle="rgba(255,255,255,.6)";
+ ctx.fillText(wm,canvas.width-40,canvas.height-40);
 }
 
 function download(){
-  const a=document.createElement("a");
-  a.download="bangla-image.png";
-  a.href=canvas.toDataURL("image/png");
-  a.click();
+ const a=document.createElement("a");
+ a.download="ultimate-image.png";
+ a.href=canvas.toDataURL("image/png");
+ a.click();
 }
 
 generate();
 </script>
-
 </body>
 </html>
