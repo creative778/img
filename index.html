@@ -2,96 +2,70 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Bangla Text Image Generator PRO MAX</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bangla Text Image Generator PRO</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700;900&family=Hind+Siliguri:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-*{box-sizing:border-box}
 body{
-  font-family:Poppins,sans-serif;
-  background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
-  min-height:100vh;
   margin:0;
   padding:20px;
+  font-family:Poppins,sans-serif;
+  background:#0f172a;
   color:#fff;
 }
 .container{
   max-width:1200px;
   margin:auto;
-  background:rgba(255,255,255,.06);
+  background:#111827;
   padding:30px;
   border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,.5);
 }
-h1{
-  text-align:center;
-  margin-bottom:10px;
-}
-.subtitle{
-  text-align:center;
-  color:#ccc;
-  margin-bottom:30px;
-}
-.form-grid{
+h1{text-align:center}
+.grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:25px;
+  gap:20px;
 }
-.form-group{
-  background:rgba(0,0,0,.25);
+.box{
+  background:#020617;
   padding:20px;
-  border-radius:12px;
+  border-radius:14px;
 }
-label{
-  font-weight:600;
-  display:block;
-  margin-bottom:8px;
-}
+label{font-weight:600;display:block;margin:10px 0 6px}
 textarea,input,select{
   width:100%;
   padding:12px;
   border-radius:8px;
   border:none;
-  font-size:15px;
 }
 textarea{min-height:120px}
-input[type=color]{height:45px}
 button{
-  padding:16px;
+  width:100%;
+  margin-top:20px;
+  padding:15px;
   border:none;
   border-radius:12px;
-  font-weight:700;
-  background:linear-gradient(135deg,#667eea,#764ba2);
+  background:linear-gradient(135deg,#6366f1,#9333ea);
   color:#fff;
+  font-weight:700;
   cursor:pointer;
 }
 button:hover{opacity:.9}
-.button-group{
-  margin-top:25px;
-  display:grid;
-  grid-template-columns:1fr;
-}
-.preview{
-  margin-top:40px;
-  text-align:center;
-}
 canvas{
+  margin-top:30px;
   max-width:100%;
+  border-radius:16px;
   background:#fff;
-  border-radius:12px;
-  box-shadow:0 15px 30px rgba(0,0,0,.5);
 }
-footer{
-  margin-top:40px;
-  text-align:center;
-  color:#aaa;
-  font-size:14px;
+.actions{
+  display:flex;
+  gap:15px;
 }
 @media(max-width:900px){
-  .form-grid{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -99,91 +73,120 @@ footer{
 <body>
 
 <div class="container">
-  <h1>✨ Bangla Text Image Generator PRO</h1>
-  <p class="subtitle">High quality Bangla text to image generator (Ultra HD)</p>
+<h1>🔥 Bangla Text Image Generator – PRO MAX</h1>
 
-  <form id="textForm">
-    <div class="form-grid">
+<div class="grid">
 
-      <!-- LEFT -->
-      <div class="form-group">
-        <label><i class="fas fa-pen"></i> Bangla Text</label>
-        <textarea id="textInput" required>আমার বাংলা আমার গর্ব</textarea>
+<div class="box">
+<label>Bangla Text</label>
+<textarea id="text">আমার বাংলা আমার অহংকার</textarea>
 
-        <label style="margin-top:15px"><i class="fas fa-font"></i> Font</label>
-        <select id="fontStyle">
-          <option value="Noto Sans Bengali">Noto Sans Bengali</option>
-          <option value="Hind Siliguri">Hind Siliguri</option>
-          <option value="Arial">Arial</option>
-        </select>
+<label>Font</label>
+<select id="font">
+<option value="Noto Sans Bengali">Noto Sans Bengali</option>
+<option value="Hind Siliguri">Hind Siliguri</option>
+</select>
 
-        <label style="margin-top:15px">Font Size</label>
-        <input type="range" id="fontSize" min="30" max="120" value="60">
-      </div>
+<label>Template</label>
+<select id="template">
+<option value="fb">Facebook Post (1200×628)</option>
+<option value="square">Square (1080×1080)</option>
+<option value="story">Story (1080×1920)</option>
+</select>
 
-      <!-- RIGHT -->
-      <div class="form-group">
-        <label><i class="fas fa-palette"></i> Background Color</label>
-        <input type="color" id="bgColor" value="#1877f2">
-
-        <label style="margin-top:15px"><i class="fas fa-text-height"></i> Text Color</label>
-        <input type="color" id="textColor" value="#ffffff">
-
-        <label style="margin-top:15px"><i class="fas fa-water"></i> Watermark</label>
-        <input type="text" id="watermark" value="ARS">
-      </div>
-
-    </div>
-
-    <div class="button-group">
-      <button type="submit"><i class="fas fa-magic"></i> Generate Ultra HD Image</button>
-    </div>
-  </form>
-
-  <div class="preview">
-    <canvas id="outputCanvas" width="1200" height="628"></canvas>
-  </div>
+<label>Font Size</label>
+<input type="range" id="size" min="40" max="120" value="70">
 </div>
 
-<footer>
-  © 2024 Bangla Text Image Generator PRO <br>
-  Created by <strong>ARS – Abdur Rahman Sheikh</strong>
-</footer>
+<div class="box">
+<label>Gradient Background</label>
+<input type="color" id="bg1" value="#2563eb">
+<input type="color" id="bg2" value="#9333ea" style="margin-top:10px">
+
+<label>Text Color</label>
+<input type="color" id="color" value="#ffffff">
+
+<label>Watermark</label>
+<input type="text" id="watermark" value="ARS">
+</div>
+
+</div>
+
+<div class="actions">
+<button onclick="generate()">✨ Generate</button>
+<button onclick="download()">⬇ Download PNG</button>
+</div>
+
+<canvas id="canvas"></canvas>
+</div>
 
 <script>
-const form = document.getElementById("textForm");
-const canvas = document.getElementById("outputCanvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
-form.addEventListener("submit", e=>{
-  e.preventDefault();
+function setSize(type){
+  if(type==="fb"){canvas.width=1200;canvas.height=628;}
+  if(type==="square"){canvas.width=1080;canvas.height=1080;}
+  if(type==="story"){canvas.width=1080;canvas.height=1920;}
+}
 
-  const text = document.getElementById("textInput").value;
-  const bg = document.getElementById("bgColor").value;
-  const color = document.getElementById("textColor").value;
-  const size = document.getElementById("fontSize").value;
-  const font = document.getElementById("fontStyle").value;
-  const watermark = document.getElementById("watermark").value;
+function drawWrappedText(text,x,y,maxWidth,lineHeight){
+  const words=text.split(" ");
+  let line="";
+  let yy=y;
+  for(let i=0;i<words.length;i++){
+    let test=line+words[i]+" ";
+    if(ctx.measureText(test).width>maxWidth){
+      ctx.fillText(line,x,yy);
+      line=words[i]+" ";
+      yy+=lineHeight;
+    }else line=test;
+  }
+  ctx.fillText(line,x,yy);
+}
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+function generate(){
+  const text=document.getElementById("text").value;
+  const font=document.getElementById("font").value;
+  const size=document.getElementById("size").value;
+  const color=document.getElementById("color").value;
+  const bg1=document.getElementById("bg1").value;
+  const bg2=document.getElementById("bg2").value;
+  const watermark=document.getElementById("watermark").value;
+  const template=document.getElementById("template").value;
 
-  // background
-  ctx.fillStyle = bg;
+  setSize(template);
+
+  const grad=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  grad.addColorStop(0,bg1);
+  grad.addColorStop(1,bg2);
+  ctx.fillStyle=grad;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // text
-  ctx.fillStyle = color;
-  ctx.font = `700 ${size}px '${font}', sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, canvas.width/2, canvas.height/2);
+  ctx.fillStyle=color;
+  ctx.font=`900 ${size}px '${font}', sans-serif`;
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.shadowColor="rgba(0,0,0,.4)";
+  ctx.shadowBlur=8;
 
-  // watermark
-  ctx.font = "bold 24px Arial";
-  ctx.fillStyle = "rgba(255,255,255,.6)";
-  ctx.textAlign = "right";
-  ctx.fillText(watermark, canvas.width-30, canvas.height-30);
-});
+  drawWrappedText(text,canvas.width/2,canvas.height/2,canvas.width-200,size+15);
+
+  ctx.shadowBlur=0;
+  ctx.font="bold 26px Arial";
+  ctx.textAlign="right";
+  ctx.fillStyle="rgba(255,255,255,.6)";
+  ctx.fillText(watermark,canvas.width-30,canvas.height-30);
+}
+
+function download(){
+  const a=document.createElement("a");
+  a.download="bangla-image.png";
+  a.href=canvas.toDataURL("image/png");
+  a.click();
+}
+
+generate();
 </script>
 
 </body>
